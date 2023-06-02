@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "982898490313",
+    "project_id": "push-notifications-igrejoteca",
+    "storage_bucket": "push-notifications-igrejoteca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982898490313:android:3837d293e20dfd36e34618",
+        "android_client_info": {
+          "package_name": "com.caiocesarcoder.igrejoteca_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "982898490313-4krme0fpb937tqhuo7v8jc8clo7bp84o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHq8X5o1rnSw3tcyXvHmgb1-NLxDU_Ayo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "982898490313-4krme0fpb937tqhuo7v8jc8clo7bp84o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

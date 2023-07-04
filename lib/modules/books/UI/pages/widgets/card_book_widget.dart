@@ -30,7 +30,7 @@ class _CardBookWidgetState extends State<CardBookWidget> {
     if (texto.length <= expected) {
     return texto; // Retorna a string original se não exceder o tamanho máximo
   } else {
-    return texto.substring(0, expected) + '...'; // Adiciona três pontos (...) no final da string
+    return '${texto.substring(0, expected)}...'; // Adiciona três pontos (...) no final da string
   }
   }
   @override

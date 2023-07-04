@@ -121,6 +121,7 @@ class _SignupPageState extends State<SignupPage> {
                             });
                             onSubmit().then((value) {
                               if (value is AuthPayload) {
+                                // ignore: invalid_use_of_visible_for_testing_member
                                 authBloc.emit(UserLoggedState(
                                     token: value.token, user: value.user));
                                 showDialog(context: context, builder: (context){
@@ -131,7 +132,7 @@ class _SignupPageState extends State<SignupPage> {
                                 showDialog(context: context, builder: (context){
                                   return const CustomDialog(text: "Erro ao realizar o cadastro, tente novamente mais tarde");
                               }).whenComplete(() => Navigator.of(context).pushReplacementNamed(
-                                    InitialPage.route));;}
+                                    InitialPage.route));}
                             });
                           }
                         }),

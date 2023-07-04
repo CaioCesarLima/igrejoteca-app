@@ -50,6 +50,8 @@ class AuthRepositoryImpl implements AuthRepository{
         await writeAccessToken(body['token']);
         await saveFirebaseToken();
         return Result.success(payload);
+      }else{
+        return Result.failure(Exception('Erro ao realizar o cadastro'));
       }
     } catch (_) {}
 

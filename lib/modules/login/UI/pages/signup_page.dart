@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:igrejoteca_app/core/theme/colors.dart';
 import 'package:igrejoteca_app/core/utils/consts.dart';
+import 'package:igrejoteca_app/modules/login/UI/pages/initial_page.dart';
 import 'package:igrejoteca_app/modules/login/UI/pages/login_page.dart';
 import 'package:igrejoteca_app/modules/login/UI/widgets/appbar_auth_widget.dart';
 import 'package:igrejoteca_app/modules/login/UI/widgets/signup_email_widget.dart';
@@ -126,7 +127,11 @@ class _SignupPageState extends State<SignupPage> {
                                   return const CustomDialog(text: "Cadasto realizado com sucesso, faça login no app");
                                 }).whenComplete(() => Navigator.of(context).pushReplacementNamed(
                                     LoginPage.route));
-                              }
+                              }else{
+                                showDialog(context: context, builder: (context){
+                                  return const CustomDialog(text: "Erro ao realizar o cadastro, tente novamente mais tarde");
+                              }).whenComplete(() => Navigator.of(context).pushReplacementNamed(
+                                    InitialPage.route));;}
                             });
                           }
                         }),

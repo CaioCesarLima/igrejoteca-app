@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:igrejoteca_app/core/theme/colors.dart';
 import 'package:igrejoteca_app/modules/books/UI/pages/home_books_page.dart';
@@ -63,7 +64,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               HomeBooksPage.route, ((route) => false));
                         },
-                        leading: const Icon(Icons.monetization_on),
+                        leading: const Icon(FontAwesomeIcons.bookBible),
                         title: const Text(
                           "Livros",
                           style: TextStyle(
@@ -78,7 +79,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               PrayersPage.route, ((route) => false));
                         },
-                        leading: const Icon(Icons.monetization_on),
+                        leading: const Icon(FontAwesomeIcons.handsPraying),
                         title: const Text(
                           "Orações",
                           style: TextStyle(
@@ -92,7 +93,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         onTap: () {
                           Navigator.pushNamed(context, ReservatiionPage.route);
                         },
-                        leading: const Icon(Icons.monetization_on),
+                        leading: const Icon(FontAwesomeIcons.registered),
                         title: const Text(
                           "Reservas",
                           style: TextStyle(
@@ -106,7 +107,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         onTap: () {
                           Navigator.pushNamed(context, EmprestimosPage.route);
                         },
-                        leading: const Icon(Icons.monetization_on),
+                        leading: const Icon(FontAwesomeIcons.locationPin),
                         title: const Text(
                           "Empréstimos",
                           style: TextStyle(
@@ -121,7 +122,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               ClubsPage.route, ((route) => false));
                         },
-                        leading: const Icon(Icons.monetization_on),
+                        leading: const Icon(FontAwesomeIcons.userGroup),
                         title: const Text(
                           "Clube do livro",
                           style: TextStyle(
@@ -136,7 +137,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               QuizPage.route, ((route) => false));
                         },
-                        leading: const Icon(Icons.monetization_on),
+                        leading: const Icon(FontAwesomeIcons.circleQuestion),
                         title: const Text(
                           "Quiz",
                           style: TextStyle(

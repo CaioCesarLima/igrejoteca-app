@@ -8,6 +8,7 @@ import 'package:igrejoteca_app/modules/login/UI/widgets/appbar_auth_widget.dart'
 import 'package:igrejoteca_app/modules/login/UI/widgets/signup_email_widget.dart';
 import 'package:igrejoteca_app/modules/login/UI/widgets/signup_name_widget.dart';
 import 'package:igrejoteca_app/modules/login/UI/widgets/signup_password_widget.dart';
+import 'package:igrejoteca_app/modules/login/store/atoms/signup_atoms.dart';
 import 'package:igrejoteca_app/modules/login/store/auth_bloc.dart';
 import 'package:igrejoteca_app/modules/login/store/auth_state.dart';
 import 'package:igrejoteca_app/shared/Widgets/app_button.dart';
@@ -16,6 +17,8 @@ import 'package:igrejoteca_app/shared/data/models/auth_payload.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository_impl.dart';
 import 'package:result_dart/result_dart.dart';
+import 'package:rx_notifier/rx_notifier.dart';
+import 'package:flutter/material.dart' hide SelectContext;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -41,11 +44,9 @@ class _SignupPageState extends State<SignupPage> {
     authBloc = AuthBloc();
     // ignore: invalid_use_of_visible_for_testing_member
     authBloc.emit(InitialAuthState());
-    
   }
 
   Future<AuthPayload?> onSubmit() async {
-   
     setState(() {
       loading = true;
     });
@@ -55,7 +56,6 @@ class _SignupPageState extends State<SignupPage> {
       passwordController.text,
     );
 
-    
     AuthPayload? result =
         response.fold((success) => success, (failure) => null);
     setState(() {
@@ -87,7 +87,8 @@ class _SignupPageState extends State<SignupPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 30, horizontal: Consts.khorintalPading),
-                      child: SignupEmailWidget(controller: emailController),
+                      child: SignupEmailWidget(
+                          controller: emailController,),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -104,38 +105,63 @@ class _SignupPageState extends State<SignupPage> {
                     horizontal: Consts.khorintalPading, vertical: 20),
                 child: state is LoadingAuthState
                     ? const Center(child: CircularProgressIndicator())
-                    : AppButton(
-                        label: "Próximo",
-                        loading: loading,
-                        backgroundColor: AppColors.primaryColor,
-                        icon: Icons.arrow_forward_ios_rounded,
-                        ontap: () {
-
-                          if (pageController.page! < 2.0) {
-                            pageController.nextPage(
-                                duration: const Duration(milliseconds: 100),
-                                curve: Curves.bounceIn);
-                          } else if (pageController.page! == 2.0) {
-                            setState(() {
-                              loading = true;
-                            });
-                            onSubmit().then((value) {
-                              if (value is AuthPayload) {
-                                // ignore: invalid_use_of_visible_for_testing_member
-                                authBloc.emit(UserLoggedState(
-                                    token: value.token, user: value.user));
-                                showDialog(context: context, builder: (context){
-                                  return const CustomDialog(text: "Cadasto realizado com sucesso, faça login no app");
-                                }).whenComplete(() => Navigator.of(context).pushReplacementNamed(
-                                    LoginPage.route));
-                              }else{
-                                showDialog(context: context, builder: (context){
-                                  return const CustomDialog(text: "Erro ao realizar o cadastro, tente novamente mais tarde");
-                              }).whenComplete(() => Navigator.of(context).pushReplacementNamed(
-                                    InitialPage.route));}
-                            });
-                          }
-                        }),
+                    : RxBuilder( 
+                        builder: (_) {
+                          return AppButton(
+                              label: "Próximo",
+                              loading: loading,
+                              backgroundColor: validNext.value
+                                  ? AppColors.primaryColor
+                                  : Colors.grey,
+                              icon: Icons.arrow_forward_ios_rounded,
+                              ontap: () {
+                                if (validNext.value) {
+                                  if (pageController.page! < 2.0) {
+                                    pageController.nextPage(
+                                        duration:
+                                            const Duration(milliseconds: 100),
+                                        curve: Curves.bounceIn);
+                                        changeNextButton.setValue(false);
+                                  } else if (pageController.page! == 2.0) {
+                                    setState(() {
+                                      loading = true;
+                                    });
+                                    onSubmit().then((value) {
+                                      if (value is AuthPayload) {
+                                        // ignore: invalid_use_of_visible_for_testing_member
+                                        authBloc.emit(UserLoggedState(
+                                            token: value.token,
+                                            user: value.user));
+                                        showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return const CustomDialog(
+                                                      text:
+                                                          "Cadasto realizado com sucesso, faça login no app");
+                                                })
+                                            .whenComplete(() =>
+                                                Navigator.of(context)
+                                                    .pushReplacementNamed(
+                                                        LoginPage.route));
+                                      } else {
+                                        showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return const CustomDialog(
+                                                      text:
+                                                          "Erro ao realizar o cadastro, tente novamente mais tarde");
+                                                })
+                                            .whenComplete(() =>
+                                                Navigator.of(context)
+                                                    .pushReplacementNamed(
+                                                        InitialPage.route));
+                                      }
+                                    });
+                                  }
+                                }
+                              });
+                        },
+                      ),
               )
             ],
           ),

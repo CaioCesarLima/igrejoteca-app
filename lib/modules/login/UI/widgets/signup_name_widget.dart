@@ -15,7 +15,7 @@ class SignupNameWidget extends StatelessWidget {
       children: [
         const AppTextMainWidget(text: "Qual é o seu nome?"),
         AppTextFieldWidget(controller: controller, onChanged: (value){
-          if(controller.text.length > 4){
+          if(controller.text.length >= 4){
             changeNextButton.setValue(true);
           }else{
             changeNextButton.setValue(false);

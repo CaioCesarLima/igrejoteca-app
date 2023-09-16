@@ -5,6 +5,7 @@ import 'package:igrejoteca_app/core/theme/colors.dart';
 import 'package:igrejoteca_app/core/utils/consts.dart';
 import 'package:igrejoteca_app/modules/login/store/auth_bloc.dart';
 import 'package:igrejoteca_app/modules/login/store/auth_state.dart';
+import 'package:igrejoteca_app/modules/quiz/UI/pages/rank_page.dart';
 import 'package:igrejoteca_app/modules/quiz/data/models/answer_model.dart';
 import 'package:igrejoteca_app/modules/quiz/data/models/question.dart';
 import 'package:igrejoteca_app/modules/quiz/data/repository/quiz_repository_impl.dart';
@@ -45,19 +46,22 @@ class _QuizPageState extends State<QuizPage> {
         return Scaffold(
             backgroundColor: AppColors.lightBlueColor,
             appBar: AppBar(
-              centerTitle: true,
               title: const Text("Quiz"),
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: Row(
                     children: [
-                      const Text("Pontuação: "),
-                      authState is UserLoggedState ? Text(authState.user.scoreQuiz.toString()) : const Text("2000") 
+                      const Text("Pontos: "),
+                      authState is UserLoggedState
+                          ? Text(authState.user.scoreQuiz.toString())
+                          : const Text("2000"),
+                      IconButton(onPressed: () {
+                        Navigator.of(context).pushNamed(RankPage.route);
+                      }, icon: const Icon(Icons.flag))
                     ],
                   ),
                 ),
-                
               ],
             ),
             drawer: const CustomDrawer(),
@@ -67,7 +71,7 @@ class _QuizPageState extends State<QuizPage> {
                 if (state is LoadedQuizState) {
                   checkAnswer = false;
                 }
-                if(state is LoadingQuizState){
+                if (state is LoadingQuizState) {
                   indexSelected = -1;
                 }
               },
@@ -117,11 +121,12 @@ class _QuizPageState extends State<QuizPage> {
                           backgroundColor: AppColors.primaryColor,
                           ontap: () async {
                             if (checkAnswer) {
-                              if(question.answers[indexSelected].correct){
-                                (authState as UserLoggedState).user.scoreQuiz += 50;
+                              if (question.answers[indexSelected].correct) {
+                                (authState as UserLoggedState).user.scoreQuiz +=
+                                    50;
                                 await QuizRepositoryImpl().setScore();
                                 Logger().i("acertou");
-                              }else{
+                              } else {
                                 Logger().i("Errou");
                               }
                               _quizBloc.add(GetQuestionEvent());

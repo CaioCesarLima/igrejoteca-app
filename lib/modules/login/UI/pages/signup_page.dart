@@ -18,7 +18,6 @@ import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository.dar
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository_impl.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:rx_notifier/rx_notifier.dart';
-import 'package:flutter/material.dart' hide SelectContext;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});

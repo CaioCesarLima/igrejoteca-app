@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:igrejoteca_app/modules/login/store/atoms/signup_atoms.dart';
 
 class AppTextFieldWidget extends StatelessWidget {
   final TextEditingController controller;

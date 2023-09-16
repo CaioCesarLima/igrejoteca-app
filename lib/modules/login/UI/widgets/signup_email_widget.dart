@@ -25,11 +25,6 @@ class _SignupEmailWidgetState extends State<SignupEmailWidget> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

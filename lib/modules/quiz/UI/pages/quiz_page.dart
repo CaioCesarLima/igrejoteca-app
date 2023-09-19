@@ -57,7 +57,9 @@ class _QuizPageState extends State<QuizPage> {
                           ? Text(authState.user.scoreQuiz.toString())
                           : const Text("2000"),
                       IconButton(onPressed: () {
-                        Navigator.of(context).pushNamed(RankPage.route);
+                        Navigator.of(context).pushNamed(RankPage.route).then((value) {
+                          _quizBloc.add(GetQuestionEvent());
+                        });
                       }, icon: const Icon(Icons.flag))
                     ],
                   ),

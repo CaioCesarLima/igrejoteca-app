@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   late AuthBloc authBloc;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool obscurePassword = true;
 
   @override
   void initState() {
@@ -70,9 +71,20 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: Consts.khorintalPading),
-              child: AppTextFieldWidget(
-                controller: _passwordController,
-                obscure: true,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: AppTextFieldWidget(
+                      controller: _passwordController,
+                      obscure: obscurePassword,
+                    ),
+                  ),
+                  IconButton(onPressed: (){
+                    setState(() {
+                      obscurePassword = !obscurePassword;
+                    });
+                  }, icon: Icon(obscurePassword ? Icons.visibility : Icons.visibility_off))
+                ],
               ),
             ),
             const SizedBox(

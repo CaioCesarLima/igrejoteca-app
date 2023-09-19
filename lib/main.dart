@@ -5,7 +5,6 @@ import 'package:igrejoteca_app/core/injector/injector.dart';
 import 'package:igrejoteca_app/core/theme/theme_data.dart';
 import 'package:igrejoteca_app/core/utils/firebase_notification/firebase_messaging_service.dart';
 import 'package:igrejoteca_app/core/utils/notifications.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 import 'core/router/router.dart' as router;
 

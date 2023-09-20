@@ -12,6 +12,7 @@ class SignupPasswordWidget extends StatefulWidget {
 }
 
 class _SignupPasswordWidgetState extends State<SignupPasswordWidget> {
+  bool obscurePassword = true;
   String? get _errorTextPassword {
     final text = widget.controller.value.text;
     if (text.isEmpty) {
@@ -30,22 +31,33 @@ class _SignupPasswordWidgetState extends State<SignupPasswordWidget> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const AppTextMainWidget(text: "Agora escolha uma senha segura"),
-        ValueListenableBuilder(
-          valueListenable: widget.controller,
-          builder: (context, value, child) {
-            return AppTextFieldWidget(
-              controller: widget.controller,
-              obscure: true,
-              errorText: _errorTextPassword,
-              onChanged: (value) {
-                if (_errorTextPassword == null) {
-                  changeNextButton.setValue(true);
-                } else {
-                  changeNextButton.setValue(false);
-                }
-              },
-            );
-          },
+        Row(
+          children: [
+            Expanded(
+              child: ValueListenableBuilder(
+                valueListenable: widget.controller,
+                builder: (context, value, child) {
+                  return AppTextFieldWidget(
+                    controller: widget.controller,
+                    obscure: obscurePassword,
+                    errorText: _errorTextPassword,
+                    onChanged: (value) {
+                      if (_errorTextPassword == null) {
+                        changeNextButton.setValue(true);
+                      } else {
+                        changeNextButton.setValue(false);
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
+            IconButton(onPressed: (){
+                    setState(() {
+                      obscurePassword = !obscurePassword;
+                    });
+                  }, icon: Icon(obscurePassword ? Icons.visibility : Icons.visibility_off))
+          ],
         )
       ],
     );

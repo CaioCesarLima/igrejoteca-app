@@ -6,7 +6,6 @@ import 'package:igrejoteca_app/core/utils/consts.dart';
 import 'package:igrejoteca_app/modules/reservations/data/models/reservation_model.dart';
 import 'package:igrejoteca_app/modules/reservations/data/repositories/reservation_repository.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 
 class ReservationRepositoryImpl implements ReservationRepository{
@@ -24,11 +23,9 @@ class ReservationRepositoryImpl implements ReservationRepository{
         List<ReservationModel>reserves = data.map((e) => ReservationModel.fromjson(e)).toList();
         return Result.success(reserves);
       }else {
-        Logger().i(resp.statusCode);
         Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 

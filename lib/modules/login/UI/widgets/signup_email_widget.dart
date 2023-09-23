@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:igrejoteca_app/modules/login/store/atoms/signup_atoms.dart';
 import 'package:igrejoteca_app/shared/Widgets/app_text_field_widget.dart';
 import 'package:igrejoteca_app/shared/Widgets/app_text_main_widget.dart';
-import 'package:logger/logger.dart';
 
 class SignupEmailWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -39,7 +38,6 @@ class _SignupEmailWidgetState extends State<SignupEmailWidget> {
               errorText: _errorTextEmail,
               onChanged: (value) {
                 if (_errorTextEmail == null) {
-                  Logger().i("valido");
                   changeNextButton.setValue(true);
                 }
               },

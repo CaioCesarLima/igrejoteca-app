@@ -6,7 +6,6 @@ import 'package:igrejoteca_app/core/utils/consts.dart';
 import 'package:igrejoteca_app/modules/emprestimos/data/loan_repository.dart';
 import 'package:igrejoteca_app/modules/emprestimos/data/models/loan_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 
 class LoanRepositoryImpl implements LoanRepository {
@@ -24,11 +23,9 @@ class LoanRepositoryImpl implements LoanRepository {
         List<LoanModel>loans = data.map((e) => LoanModel.fromjson(e)).toList();
         return Result.success(loans);
       }else {
-        Logger().i(resp.statusCode);
         Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 

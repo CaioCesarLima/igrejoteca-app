@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:igrejoteca_app/core/enviroments/enviroment.dart';
@@ -6,7 +5,6 @@ import 'package:igrejoteca_app/core/utils/consts.dart';
 import 'package:igrejoteca_app/modules/quiz/data/models/question.dart';
 import 'package:igrejoteca_app/modules/quiz/data/repository/quiz_repository.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 
 import '../models/rank_model.dart';
@@ -20,25 +18,21 @@ class QuizRepositoryImpl implements QuizRepository {
 
       http.Response resp = await http.get(url, headers: headers);
 
-      Logger().d(resp.body);
-
       if (resp.statusCode == 200) {
         Map<String, dynamic> body = jsonDecode(resp.body);
         Map<String, dynamic> data = body['data'];
         QuestionModel question = QuestionModel.fromjson(data);
         return Result.success(question);
-      }else {
-        Logger().i(resp.statusCode);
+      } else {
         Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 
     return Result.failure(Exception('Ocorreu algum erro!'));
   }
-  
+
   @override
   Future<void> setScore() async {
     try {
@@ -46,11 +40,7 @@ class QuizRepositoryImpl implements QuizRepository {
       Map<String, String> headers = await Consts.authHeader();
 
       await http.put(url, headers: headers);
-
-    } catch (e) {
-      Logger().d(e.toString());
-    }
-
+    } catch (_) {}
   }
 
   @override
@@ -64,21 +54,18 @@ class QuizRepositoryImpl implements QuizRepository {
       if (resp.statusCode == 200) {
         Map<String, dynamic> body = jsonDecode(resp.body);
         List<dynamic> data = body['data'];
-        List<RankModel>ranks =[];
+        List<RankModel> ranks = [];
         for (int i = 0; i < data.length; i++) {
-          ranks.add(RankModel.fromJson(data[i], i+1));
+          ranks.add(RankModel.fromJson(data[i], i + 1));
         }
         return Result.success(ranks);
-      }else {
-        Logger().i(resp.statusCode);
+      } else {
         Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 
     return Result.failure(Exception('Ocorreu algum erro!'));
   }
-  
 }

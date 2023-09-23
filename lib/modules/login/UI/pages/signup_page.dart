@@ -50,8 +50,8 @@ class _SignupPageState extends State<SignupPage> {
       loading = true;
     });
     Result<AuthPayload, Exception>? response = await authRepository.signup(
-      nameController.text,
-      emailController.text,
+      nameController.text.trim(),
+      emailController.text.trim(),
       passwordController.text,
     );
 

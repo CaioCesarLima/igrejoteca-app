@@ -14,7 +14,6 @@ import 'package:igrejoteca_app/modules/quiz/store/bloc/quiz/event/quiz_event.dar
 import 'package:igrejoteca_app/modules/quiz/store/bloc/quiz/state/quiz_state.dart';
 import 'package:igrejoteca_app/shared/Widgets/app_button.dart';
 import 'package:igrejoteca_app/shared/Widgets/custom_drawer.dart';
-import 'package:logger/logger.dart';
 
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key});
@@ -56,11 +55,15 @@ class _QuizPageState extends State<QuizPage> {
                       authState is UserLoggedState
                           ? Text(authState.user.scoreQuiz.toString())
                           : const Text("2000"),
-                      IconButton(onPressed: () {
-                        Navigator.of(context).pushNamed(RankPage.route).then((value) {
-                          _quizBloc.add(GetQuestionEvent());
-                        });
-                      }, icon: const Icon(Icons.flag))
+                      IconButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(RankPage.route)
+                                .then((value) {
+                              _quizBloc.add(GetQuestionEvent());
+                            });
+                          },
+                          icon: const Icon(Icons.flag))
                     ],
                   ),
                 ),
@@ -120,22 +123,24 @@ class _QuizPageState extends State<QuizPage> {
                             horizontal: Consts.khorintalPading, vertical: 20),
                         child: AppButton(
                           label: checkAnswer ? "Próxima" : "Corrigir",
-                          backgroundColor: AppColors.primaryColor,
+                          backgroundColor: indexSelected > -1
+                              ? AppColors.primaryColor
+                              : Colors.grey,
                           ontap: () async {
-                            if (checkAnswer) {
-                              if (question.answers[indexSelected].correct) {
-                                (authState as UserLoggedState).user.scoreQuiz +=
-                                    50;
-                                await QuizRepositoryImpl().setScore();
-                                Logger().i("acertou");
-                              } else {
-                                Logger().i("Errou");
+                            if (indexSelected > -1) {
+                              if (checkAnswer) {
+                                if (question.answers[indexSelected].correct) {
+                                  (authState as UserLoggedState)
+                                      .user
+                                      .scoreQuiz += 50;
+                                  await QuizRepositoryImpl().setScore();
+                                } else {}
+                                _quizBloc.add(GetQuestionEvent());
+                                checkAnswer = false;
                               }
-                              _quizBloc.add(GetQuestionEvent());
-                              checkAnswer = false;
+                              checkAnswer = true;
+                              setState(() {});
                             }
-                            checkAnswer = true;
-                            setState(() {});
                           },
                         ),
                       ),

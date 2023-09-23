@@ -6,7 +6,6 @@ import 'package:igrejoteca_app/core/utils/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:igrejoteca_app/modules/prayers/data/models/testemonie_model.dart';
 import 'package:igrejoteca_app/modules/prayers/data/tetemonies_repository.dart';
-import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 
 class TestemoniesRepositoryImpl implements TestemoniesRepository {
@@ -24,11 +23,9 @@ class TestemoniesRepositoryImpl implements TestemoniesRepository {
         List<TestemonieModel>testemonies = data.map((e) => TestemonieModel.fromjson(e)).toList().reversed.toList();
         return Result.success(testemonies);
       }else {
-        Logger().i(resp.statusCode);
         Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 

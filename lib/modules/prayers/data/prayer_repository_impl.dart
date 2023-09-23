@@ -5,7 +5,6 @@ import 'package:igrejoteca_app/core/utils/consts.dart';
 import 'package:http/http.dart' as http;
 import 'package:igrejoteca_app/modules/prayers/data/models/prayer_model.dart';
 import 'package:igrejoteca_app/modules/prayers/data/prayer_repository.dart';
-import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 
 class PrayerRepositoryImpl implements PrayerRepository {
@@ -24,11 +23,9 @@ class PrayerRepositoryImpl implements PrayerRepository {
             data.map((e) => PrayerModel.fromjson(e)).toList().reversed.toList();
         return Result.success(prayers);
       } else {
-        Logger().i(resp.statusCode);
         Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 
@@ -50,11 +47,9 @@ class PrayerRepositoryImpl implements PrayerRepository {
             data.map((e) => PrayerModel.fromjson(e)).toList().reversed.toList();
         return Result.success(prayers);
       } else {
-        Logger().i(resp.statusCode);
         Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 

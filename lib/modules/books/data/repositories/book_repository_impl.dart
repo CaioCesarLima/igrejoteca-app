@@ -4,7 +4,6 @@ import 'package:igrejoteca_app/core/enviroments/enviroment.dart';
 import 'package:igrejoteca_app/core/utils/consts.dart';
 import 'package:igrejoteca_app/modules/books/data/models/book_model.dart';
 import 'package:igrejoteca_app/modules/books/data/repositories/book_repository.dart';
-import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,11 +23,9 @@ class BookBackendRepository implements BookRepository{
         
         return Result.success(books);
       }else {
-        Logger().i(resp.statusCode);
         Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 
@@ -49,7 +46,6 @@ class BookBackendRepository implements BookRepository{
         return Result.failure(Exception("Erro na comunicação"));
       }
     } catch (e) {
-      Logger().d(e.toString());
       return Result.failure(Exception(e.toString()));
     }
 

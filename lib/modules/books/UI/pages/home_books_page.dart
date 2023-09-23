@@ -9,7 +9,6 @@ import 'package:igrejoteca_app/modules/books/store/bloc/book/bloc/book_bloc.dart
 import 'package:igrejoteca_app/modules/books/store/bloc/book/event/book_event.dart';
 import 'package:igrejoteca_app/modules/books/store/bloc/book/state/book_state.dart';
 import 'package:igrejoteca_app/shared/Widgets/custom_drawer.dart';
-import 'package:logger/logger.dart';
 
 class HomeBooksPage extends StatefulWidget {
   const HomeBooksPage({super.key});
@@ -35,7 +34,6 @@ class _HomeBooksPageState extends State<HomeBooksPage> {
     return BlocConsumer<BookBloc, BookState>(
       listener: (context, state) {
         if(state is ReservedBookState){
-          Logger().i("Livro reservado");
         }
         if(state is ErrorReservedBookState){
           _bookbloc.add(GetBook(token: ""));

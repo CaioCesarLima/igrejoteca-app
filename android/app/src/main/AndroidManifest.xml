@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.caiocesarcoder.igrejoteca_app">
+    package="com.caiocesarcoder.igrejoteca_app" android:versionCode="2">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="Igrejoteca App"

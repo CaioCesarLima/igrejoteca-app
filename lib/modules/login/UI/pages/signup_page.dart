@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:igrejoteca_app/core/theme/colors.dart';
 import 'package:igrejoteca_app/core/utils/consts.dart';
+import 'package:igrejoteca_app/core/utils/execeptions/signup_execeptions.dart';
 import 'package:igrejoteca_app/modules/login/UI/pages/initial_page.dart';
 import 'package:igrejoteca_app/modules/login/UI/pages/login_page.dart';
 import 'package:igrejoteca_app/modules/login/UI/widgets/appbar_auth_widget.dart';
@@ -16,6 +17,7 @@ import 'package:igrejoteca_app/shared/Widgets/custom_dialog.dart';
 import 'package:igrejoteca_app/shared/data/models/auth_payload.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository_impl.dart';
+import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
@@ -36,6 +38,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController passwordController = TextEditingController();
   final AuthRepository authRepository = AuthRepositoryImpl();
   bool loading = false;
+  String? error;
 
   @override
   void initState() {
@@ -43,6 +46,7 @@ class _SignupPageState extends State<SignupPage> {
     authBloc = AuthBloc();
     // ignore: invalid_use_of_visible_for_testing_member
     authBloc.emit(InitialAuthState());
+    validNext.setValue(false);
   }
 
   Future<AuthPayload?> onSubmit() async {
@@ -55,8 +59,13 @@ class _SignupPageState extends State<SignupPage> {
       passwordController.text,
     );
 
-    AuthPayload? result =
-        response.fold((success) => success, (failure) => null);
+    AuthPayload? result = response.fold((success) => success, (failure) {
+      Logger().i(failure.toFailure());
+      setState(() {
+        error = (failure as SignupExceptions).message;
+      });
+      return null;
+    });
     setState(() {
       loading = false;
     });
@@ -87,14 +96,22 @@ class _SignupPageState extends State<SignupPage> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 30, horizontal: Consts.khorintalPading),
                       child: SignupEmailWidget(
-                          controller: emailController,),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 30, horizontal: Consts.khorintalPading),
-                      child: SignupPasswordWidget(
-                        controller: passwordController,
+                        controller: emailController,
                       ),
+                    ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 30, horizontal: Consts.khorintalPading),
+                          child: SignupPasswordWidget(
+                            controller: passwordController,
+                          ),
+                        ),
+                        const Text("Senha precisa ter no mínimo 6 caracteres"),
+                        const Text("Senha precisa ter no mínimo 1 número"),
+                        const Text("Senha precisa ter no mínimo 1 letra"),
+                      ],
                     )
                   ],
                 ),
@@ -104,7 +121,7 @@ class _SignupPageState extends State<SignupPage> {
                     horizontal: Consts.khorintalPading, vertical: 20),
                 child: state is LoadingAuthState
                     ? const Center(child: CircularProgressIndicator())
-                    : RxBuilder( 
+                    : RxBuilder(
                         builder: (_) {
                           return AppButton(
                               label: "Próximo",
@@ -120,7 +137,7 @@ class _SignupPageState extends State<SignupPage> {
                                         duration:
                                             const Duration(milliseconds: 100),
                                         curve: Curves.bounceIn);
-                                        changeNextButton.setValue(false);
+                                    changeNextButton.setValue(false);
                                   } else if (pageController.page! == 2.0) {
                                     setState(() {
                                       loading = true;
@@ -144,16 +161,17 @@ class _SignupPageState extends State<SignupPage> {
                                                         LoginPage.route));
                                       } else {
                                         showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return const CustomDialog(
-                                                      text:
-                                                          "Erro ao realizar o cadastro, tente novamente mais tarde");
-                                                })
-                                            .whenComplete(() =>
-                                                Navigator.of(context)
-                                                    .pushReplacementNamed(
-                                                        InitialPage.route));
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                  text: error == null
+                                                      ? "Erro ao realizar o cadastro, tente novamente mais tarde"
+                                                      : error!);
+                                            }).whenComplete(() {
+                                          Navigator.of(context)
+                                              .pushReplacementNamed(
+                                                  InitialPage.route);
+                                        });
                                       }
                                     });
                                   }

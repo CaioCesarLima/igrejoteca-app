@@ -4,9 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:igrejoteca_app/core/enviroments/enviroment.dart';
 import 'package:igrejoteca_app/core/storage/storage.dart';
 import 'package:igrejoteca_app/core/utils/consts.dart';
+import 'package:igrejoteca_app/core/utils/execeptions/signup_execeptions.dart';
 import 'package:igrejoteca_app/core/utils/firebase_notification/firebase_messaging_service.dart';
 import 'package:igrejoteca_app/shared/data/models/auth_payload.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository.dart';
+import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 
 class AuthRepositoryImpl implements AuthRepository{
@@ -50,12 +52,16 @@ class AuthRepositoryImpl implements AuthRepository{
         await writeAccessToken(body['token']);
         await saveFirebaseToken();
         return Result.success(payload);
-      }else{
-        return Result.failure(Exception('Erro ao realizar o cadastro'));
+      }else if(resp.statusCode == 400){
+        Map<String, dynamic> body = jsonDecode(resp.body);
+        if(body["error"]!= null){
+          return Result.failure(SignupExceptions(message: body["error"]));
+        }
+        return Result.failure(SignupExceptions(message: 'Erro ao realizar o cadastro'));
       }
     } catch (_) {}
 
-    return Result.failure(Exception('Erro ao realizar o cadastro'));
+    return Result.failure(SignupExceptions(message: 'Erro ao realizar o cadastro'));
   }
 
   Future<void> saveFirebaseToken() async {

@@ -132,7 +132,7 @@ class _QuizPageState extends State<QuizPage> {
                                 if (question.answers[indexSelected].correct) {
                                   (authState as UserLoggedState)
                                       .user
-                                      .scoreQuiz += 50;
+                                      .scoreQuiz += 10;
                                   await QuizRepositoryImpl().setScore();
                                 } else {}
                                 _quizBloc.add(GetQuestionEvent());

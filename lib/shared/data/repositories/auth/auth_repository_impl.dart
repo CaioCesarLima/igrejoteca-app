@@ -28,6 +28,7 @@ class AuthRepositoryImpl implements AuthRepository{
         return Result.success(payload);
       }
     } catch (e) {
+
       return Result.failure(Exception(e.toString()));
     }
 

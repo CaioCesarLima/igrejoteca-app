@@ -7,6 +7,11 @@ class GetBook implements BookEvent {
   GetBook({required this.token});
 }
 
+class GetSearchBook implements BookEvent {
+  final String search;
+
+  GetSearchBook({required this.search});
+}
 
 class ReserveBook implements BookEvent {
   final String bookId;

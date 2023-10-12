@@ -31,6 +31,30 @@ class BookBackendRepository implements BookRepository{
 
     return Result.failure(Exception('Ocorreu algum erro!'));
   }
+
+  @override
+  Future<Result<List<BookModel>, Exception>> getSearchBook(String search) async {
+    try {
+      Uri url = getBackendURL(path: "/api/search-books",queryParameters: {"search": search});
+      Map<String, String> headers = await Consts.authHeader();
+
+      http.Response resp = await http.get(url, headers: headers);
+
+      if (resp.statusCode == 200) {
+        dynamic body = jsonDecode(resp.body);
+        List<dynamic> data = body['data'];
+        List<BookModel>books = data.map((e) => BookModel.fromjson(e)).toList();
+        
+        return Result.success(books);
+      }else {
+        Result.failure(Exception("Erro na comunicação"));
+      }
+    } catch (e) {
+      return Result.failure(Exception(e.toString()));
+    }
+
+    return Result.failure(Exception('Ocorreu algum erro!'));
+  }
   
   @override
   Future<Result<bool, Exception>> reserveBook(String bookId) async {
@@ -50,4 +74,6 @@ class BookBackendRepository implements BookRepository{
     }
 
   }
+  
+  
 }

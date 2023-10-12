@@ -13,6 +13,7 @@ class BookBloc extends Bloc<BookEvent, BookState> {
   final BookRepository _bookRepository = BookBackendRepository();
   BookBloc() : super(EmptyBookState()) {
     on<GetBook>(_getListBooks);
+    on<GetSearchBook>(_getSearchBooks);
     on<ReserveBook>(_reserveBook);
   }
 
@@ -23,6 +24,19 @@ class BookBloc extends Bloc<BookEvent, BookState> {
     emit(LoadingListBooksState());
     Result<List<BookModel>, Exception> response =
         await _bookRepository.getAllBooks();
+
+    response.fold((success) {
+      emit(LoadedBookState(books: success));
+    }, (failure) => emit(ErrorBookState()));
+  }
+
+  Future<void> _getSearchBooks(
+    GetSearchBook event,
+    Emitter<BookState> emit,
+  ) async {
+    emit(LoadingListBooksState());
+    Result<List<BookModel>, Exception> response =
+        await _bookRepository.getSearchBook(event.search);
 
     response.fold((success) {
       emit(LoadedBookState(books: success));

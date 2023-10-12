@@ -33,9 +33,8 @@ class _HomeBooksPageState extends State<HomeBooksPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<BookBloc, BookState>(
       listener: (context, state) {
-        if(state is ReservedBookState){
-        }
-        if(state is ErrorReservedBookState){
+        if (state is ReservedBookState) {}
+        if (state is ErrorReservedBookState) {
           _bookbloc.add(GetBook(token: ""));
         }
       },
@@ -65,6 +64,9 @@ class _HomeBooksPageState extends State<HomeBooksPage> {
                         children: [
                           Expanded(
                             child: TextField(
+                              onSubmitted: ((value) {
+                                _bookbloc.add(GetSearchBook(search: value));
+                              }),
                               decoration: InputDecoration(
                                   hintText: "Pesquisar",
                                   suffixIcon: const Icon(Icons.search),
@@ -80,12 +82,14 @@ class _HomeBooksPageState extends State<HomeBooksPage> {
                 ),
               ),
               (state is LoadedBookState)
-                  ? BodyHomeBook(list: state.books,)
+                  ? BodyHomeBook(
+                      list: state.books,
+                    )
                   : const Expanded(
-                    child: Center(
-                    child: CircularProgressIndicator(),
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                  ),
+                    ),
             ],
           ),
         );
@@ -97,25 +101,30 @@ class _HomeBooksPageState extends State<HomeBooksPage> {
 class BodyHomeBook extends StatelessWidget {
   final List<BookModel> list;
   const BodyHomeBook({
-    Key? key, required this.list,
+    Key? key,
+    required this.list,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: GridView.builder(
-            itemCount: list.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
-      ),
-      itemBuilder: (context, index) {
-          return CardBookWidget(book: list[index]);
-      },
-    ),
-        ));
+      padding: const EdgeInsets.all(10.0),
+      child: list.isEmpty
+          ? const Center(
+              child: Text("Nenhum livro encontrado"),
+            )
+          : GridView.builder(
+              itemCount: list.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+              ),
+              itemBuilder: (context, index) {
+                return CardBookWidget(book: list[index]);
+              },
+            ),
+    ));
   }
 }

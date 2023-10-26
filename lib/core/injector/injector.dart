@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:igrejoteca_app/modules/books/store/bloc/book/bloc/book_bloc.dart';
+import 'package:igrejoteca_app/modules/clubs/store/bloc/clubs_bloc.dart';
 import 'package:igrejoteca_app/modules/emprestimos/store/bloc/loan/bloc/loan_bloc.dart';
 import 'package:igrejoteca_app/modules/login/store/atoms/sigunp_reducers.dart';
 import 'package:igrejoteca_app/modules/login/store/auth_bloc.dart';
@@ -18,5 +19,6 @@ void setupLocator() {
   locator.registerLazySingleton<QuizBloc>(() => QuizBloc());
   locator.registerLazySingleton<PrayerBloc>(() => PrayerBloc());
   locator.registerLazySingleton<TestemonyBloc>(() => TestemonyBloc());
+  locator.registerLazySingleton<ClubBloc>(() => ClubBloc());
   locator.registerSingleton<SignupReducer>(SignupReducer());
 }

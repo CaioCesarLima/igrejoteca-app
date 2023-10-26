@@ -8,6 +8,7 @@ import 'package:igrejoteca_app/modules/books/data/models/book_model.dart';
 import 'package:igrejoteca_app/modules/books/store/bloc/book/bloc/book_bloc.dart';
 import 'package:igrejoteca_app/modules/books/store/bloc/book/event/book_event.dart';
 import 'package:igrejoteca_app/modules/books/store/bloc/book/state/book_state.dart';
+import 'package:igrejoteca_app/modules/clubs/UI/pages/clubs_page.dart';
 import 'package:igrejoteca_app/shared/Widgets/app_button.dart';
 
 class CardBookWidget extends StatefulWidget {
@@ -159,7 +160,20 @@ class _CardBookWidgetState extends State<CardBookWidget> {
                                               _bloc.add(ReserveBook(widget.book.id));
                                             }
                                             : () {}),
-                                  )
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: Consts.khorintalPading,
+                                        vertical: 5),
+                                    child: state is LoadingReservedBookState ?
+                                    const Center(child: CircularProgressIndicator(),) 
+                                    : AppButton(
+                                        label: "Clube do Livro",
+                                        backgroundColor: AppColors.accentColor,
+                                        ontap: () {
+                                          Navigator.of(context).pushNamed(ClubsPage.route);
+                                        }),
+                                  ),
                                 ],
                               ),
                             );

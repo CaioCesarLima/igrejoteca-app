@@ -14,6 +14,7 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
   QuizBloc(): super(EmptyQuizState()){
     on<GetQuestionEvent>(_getQuestion);
     on<GetRankEvent>(_getRankEvent);
+    on<IncrementScoreEvent>(_incrementScoreEvent);
   }
   
   Future<void> _getQuestion(GetQuestionEvent event, Emitter emit) async{
@@ -28,4 +29,10 @@ class QuizBloc extends Bloc<QuizEvent, QuizState> {
     result.fold((success) => emit(LoadedRankState(success)),
         (failure) => emit(EmptyQuizState()));
   }
+
+  Future<void> _incrementScoreEvent(IncrementScoreEvent event, Emitter emit) async {
+    emit(LoadingQuizState());
+    await _quizRepository.setScore();
+  }
+
 }

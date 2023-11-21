@@ -44,8 +44,6 @@ class ClubsRepositoriesImpl extends ClubsRepositories{
     } catch (e) {
       return false;
     }
-
-    return false;
   }
 
   @override

@@ -14,6 +14,7 @@ class LoadedQuizState extends QuizState{
 
 class CorrectQuizState extends QuizState{}
 
+
 class EmptyQuizState extends QuizState{}
 
 class LoadedRankState extends QuizState{

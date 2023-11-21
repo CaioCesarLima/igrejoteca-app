@@ -1,5 +1,4 @@
 import 'package:igrejoteca_app/modules/clubs/data/models/club_model.dart';
-import 'package:igrejoteca_app/modules/emprestimos/data/models/loan_model.dart';
 
 abstract class ClubState{}
 

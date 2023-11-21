@@ -8,6 +8,7 @@ import 'package:igrejoteca_app/core/utils/execeptions/signup_execeptions.dart';
 import 'package:igrejoteca_app/core/utils/firebase_notification/firebase_messaging_service.dart';
 import 'package:igrejoteca_app/shared/data/models/auth_payload.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository.dart';
+import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 
 class AuthRepositoryImpl implements AuthRepository{
@@ -111,5 +112,25 @@ Future<void> deleteFirebaseToken() async {
     } catch (_) {}
   }
 }
+
+  @override
+  Future<Result<int, Exception>> updateScore(String userId) async {
+    try {
+      Uri url = getBackendURL(path: "/api/users/$userId");
+    Map<String, String> headers = await Consts.authHeader();
+      http.Response resp = await http
+          .get(url, headers: headers);
+
+      if (resp.statusCode == 200) {
+        Map<String, dynamic> body = jsonDecode(resp.body);       
+        return Result.success(body["data"]["score"]);
+      }
+    } catch (e) {
+
+      return Result.failure(Exception(e.toString()));
+    }
+
+    return Result.failure(Exception('Ocorreu algum erro!'));
+  }
   
 }

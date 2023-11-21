@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:igrejoteca_app/core/theme/colors.dart';
 import 'package:igrejoteca_app/core/utils/consts.dart';
 import 'package:igrejoteca_app/modules/login/store/auth_bloc.dart';
+import 'package:igrejoteca_app/modules/login/store/auth_event.dart';
 import 'package:igrejoteca_app/modules/login/store/auth_state.dart';
 import 'package:igrejoteca_app/modules/quiz/UI/pages/rank_page.dart';
 import 'package:igrejoteca_app/modules/quiz/data/models/answer_model.dart';
@@ -35,6 +36,12 @@ class _QuizPageState extends State<QuizPage> {
     _quizBloc = GetIt.I<QuizBloc>();
     _quizBloc.add(GetQuestionEvent());
     _authBloc = GetIt.I<AuthBloc>();
+    _authBloc.add(
+      UpdateScoreUser(userLogged: {
+        "token": (_authBloc.state as UserLoggedState).token,
+        "user": (_authBloc.state as UserLoggedState).user
+      }),
+    );
   }
 
   @override
@@ -54,7 +61,13 @@ class _QuizPageState extends State<QuizPage> {
                       const Text("Pontos: "),
                       authState is UserLoggedState
                           ? Text(authState.user.scoreQuiz.toString())
-                          : const Text("2000"),
+                          : authState is LoadingScoreAuthState
+                              ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                  child: CircularProgressIndicator(
+                                      color: Colors.grey))
+                              : const Text("2000"),
                       IconButton(
                           onPressed: () {
                             Navigator.of(context)

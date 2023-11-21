@@ -19,6 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SingupEvent>(_signup);
     on<CheckUserLogged>(_checkUserLogged);
     on<LogOutEvent>(_logout);
+    on<UpdateScoreUser>(_updateScore);
   }
 
   Future<void> _login(
@@ -26,7 +27,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(LoadingAuthState());
-    Result<AuthPayload, Exception> response = await _authRepository.login(event.email, event.password);
+    Result<AuthPayload, Exception> response =
+        await _authRepository.login(event.email, event.password);
     response.fold((success) {
       writeAccessToken(success.token);
       writeUserData(success.user.encodeB64());
@@ -36,24 +38,51 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
-  Future<void> _signup(SingupEvent event, Emitter<AuthState> emit) async {
-    
-  }
+  Future<void> _signup(SingupEvent event, Emitter<AuthState> emit) async {}
 
-  Future<void> _checkUserLogged(CheckUserLogged event, Emitter<AuthState> emit) async {
+  Future<void> _checkUserLogged(
+      CheckUserLogged event, Emitter<AuthState> emit) async {
     emit(LoadingAuthState());
     String token = await readAccessToken();
     String user = await readUserData();
-    
-    if(token.isEmpty){
+
+    if (token.isEmpty) {
       emit(InitialAuthState());
-    }else{
+    } else {
       String body = utf8.decode(base64.decode(user));
       UserModel userModel = UserModel.fromJson(jsonDecode(body));
-      emit(UserLoggedState(token: token, user: UserModel(email: userModel.email, id: userModel.id, name: userModel.name, scoreQuiz: userModel.scoreQuiz)));
+      emit(UserLoggedState(
+          token: token,
+          user: UserModel(
+              email: userModel.email,
+              id: userModel.id,
+              name: userModel.name,
+              scoreQuiz: userModel.scoreQuiz)));
     }
   }
 
+  Future<void> _updateScore(
+      UpdateScoreUser event, Emitter<AuthState> emit) async {
+    
+    emit(LoadingScoreAuthState());
+    
+    Result<int, Exception> result = await _authRepository
+        .updateScore((event.userLogged["user"] as UserModel).id);
+    result.fold((success) {
+      UserModel user = event.userLogged["user"];
+      emit(
+        UserLoggedState(
+          token: event.userLogged["token"],
+          user: UserModel(
+            email: user.email,
+            id: user.id,
+            name: user.name,
+            scoreQuiz: success
+          ),
+        ),
+      );
+    }, (failure) => null);
+  }
 
   Future<void> _logout(LogOutEvent event, Emitter<AuthState> emit) async {
     emit(LoadingAuthState());

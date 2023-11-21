@@ -13,6 +13,8 @@ class UserLoggedState implements AuthState {
 
 class LoadingAuthState implements AuthState {}
 
+class LoadingScoreAuthState implements AuthState {}
+
 class ErrorAuthState implements AuthState {}
 
 class LogoutAuthState implements AuthState {}

@@ -14,3 +14,9 @@ class LogOutEvent implements AuthEvent {}
 
 class CheckUserLogged implements AuthEvent {}
 
+
+class UpdateScoreUser implements AuthEvent{
+  final Map<String, dynamic> userLogged;
+
+  UpdateScoreUser({required this.userLogged});
+}

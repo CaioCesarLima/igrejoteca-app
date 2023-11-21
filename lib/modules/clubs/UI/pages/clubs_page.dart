@@ -35,30 +35,32 @@ class _ClubsPageState extends State<ClubsPage> {
           title: const Text("Club do Livro"),
         ),
         drawer: const CustomDrawer(),
-        body: BlocBuilder(
-          bloc: _clubBloc,
-          builder: (context, state) {
-            if (state is LoadedClubsState) {
-              return ListView.builder(
-                itemCount: state.clubs.length,
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: (() {
-                    Navigator.pushNamed(context, ClubPage.route);
-                  }),
-                  child: ClubCard(club: state.clubs[index],),
-                ),
-              );
-            }
-            if (state is LoadingLoaClubsState) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return const Center(
-              child: Text("Sem clubs no momento"),
-            );
-          },
-        ));
+        body: const Center(child: Text("Em Breve ...")),
+        // body: BlocBuilder(
+        //   bloc: _clubBloc,
+        //   builder: (context, state) {
+        //     if (state is LoadedClubsState) {
+        //       return ListView.builder(
+        //         itemCount: state.clubs.length,
+        //         itemBuilder: (context, index) => GestureDetector(
+        //           onTap: (() {
+        //             Navigator.pushNamed(context, ClubPage.route);
+        //           }),
+        //           child: ClubCard(club: state.clubs[index],),
+        //         ),
+        //       );
+        //     }
+        //     if (state is LoadingLoaClubsState) {
+        //       return const Center(
+        //         child: CircularProgressIndicator(),
+        //       );
+        //     }
+        //     return const Center(
+        //       child: Text("Sem clubs no momento"),
+        //     );
+        //   },
+        // ),
+        );
   }
 }
 

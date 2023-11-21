@@ -8,7 +8,7 @@ import 'package:igrejoteca_app/core/utils/execeptions/signup_execeptions.dart';
 import 'package:igrejoteca_app/core/utils/firebase_notification/firebase_messaging_service.dart';
 import 'package:igrejoteca_app/shared/data/models/auth_payload.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository.dart';
-import 'package:logger/logger.dart';
+
 import 'package:result_dart/result_dart.dart';
 
 class AuthRepositoryImpl implements AuthRepository{

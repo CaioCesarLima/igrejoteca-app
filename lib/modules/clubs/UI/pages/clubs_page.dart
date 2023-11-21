@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:igrejoteca_app/core/theme/colors.dart';
-import 'package:igrejoteca_app/modules/clubs/UI/pages/club_page.dart';
 import 'package:igrejoteca_app/modules/clubs/data/models/club_model.dart';
 import 'package:igrejoteca_app/modules/clubs/store/bloc/clubs_bloc.dart';
 import 'package:igrejoteca_app/modules/clubs/store/event/clubs_event.dart';
-import 'package:igrejoteca_app/modules/clubs/store/state/clubs_state.dart';
 import 'package:igrejoteca_app/shared/Widgets/custom_drawer.dart';
 
 class ClubsPage extends StatefulWidget {

@@ -9,7 +9,6 @@ import 'package:igrejoteca_app/modules/login/store/auth_state.dart';
 import 'package:igrejoteca_app/modules/quiz/UI/pages/rank_page.dart';
 import 'package:igrejoteca_app/modules/quiz/data/models/answer_model.dart';
 import 'package:igrejoteca_app/modules/quiz/data/models/question.dart';
-import 'package:igrejoteca_app/modules/quiz/data/repository/quiz_repository_impl.dart';
 import 'package:igrejoteca_app/modules/quiz/store/bloc/quiz/bloc/quiz_bloc.dart';
 import 'package:igrejoteca_app/modules/quiz/store/bloc/quiz/event/quiz_event.dart';
 import 'package:igrejoteca_app/modules/quiz/store/bloc/quiz/state/quiz_state.dart';

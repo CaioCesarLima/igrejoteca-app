@@ -119,7 +119,7 @@ class _SignupPageState extends State<SignupPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: Consts.khorintalPading, vertical: 20),
-                child: state is LoadingAuthState
+                child: loading
                     ? const Center(child: CircularProgressIndicator())
                     : RxBuilder(
                         builder: (_) {

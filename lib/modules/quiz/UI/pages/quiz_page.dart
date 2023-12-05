@@ -67,7 +67,7 @@ class _QuizPageState extends State<QuizPage> {
                                   child: CircularProgressIndicator(
                                       color: Colors.grey))
                               : const Text("2000"),
-                      IconButton(
+                      TextButton(
                           onPressed: () {
                             Navigator.of(context)
                                 .pushNamed(RankPage.route)
@@ -75,7 +75,7 @@ class _QuizPageState extends State<QuizPage> {
                               _quizBloc.add(GetQuestionEvent());
                             });
                           },
-                          icon: const Icon(Icons.flag))
+                          child: const Text("Ranking")),
                     ],
                   ),
                 ),

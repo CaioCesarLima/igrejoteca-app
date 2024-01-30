@@ -4,5 +4,5 @@ import 'package:result_dart/result_dart.dart';
 
 abstract class PostsRepository {
   Future<Result<ClubPayload, Exception>> getPosts(String clubId);
-  Future<PostModel?> createPost({required String clubId, required String text});
+  Future<PostModel?> createPost({required String clubId, required String text, required int pageNumber});
 }

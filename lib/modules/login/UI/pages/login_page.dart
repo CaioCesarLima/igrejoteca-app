@@ -120,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                           label: "Acessar",
                           backgroundColor: AppColors.primaryColor,
                           ontap: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
                             // Navigator.of(context).pushNamedAndRemoveUntil(
                             //     EmprestimosPage.route, (route) => false);
                             authBloc.add(LoginEvent(

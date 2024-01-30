@@ -36,11 +36,11 @@ class PostsRepositoryImpl extends PostsRepository{
   }
   
   @override
-  Future<PostModel?> createPost({required String clubId, required String text}) async {
+  Future<PostModel?> createPost({required String clubId, required String text, required int pageNumber}) async {
     try {
       Uri url = getBackendURL(path: "/api/club/posts");
       Map<String, String> headers = await Consts.authHeader();
-      String body = json.encode({"club_id": clubId, "text": text});
+      String body = json.encode({"club_id": clubId, "text": text, "page_number": pageNumber});
       http.Response resp = await http.post(url, headers: headers, body: body);
 
       if (resp.statusCode == 201) {    

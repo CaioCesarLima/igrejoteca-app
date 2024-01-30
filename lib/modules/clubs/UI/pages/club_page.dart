@@ -183,13 +183,28 @@ class PostCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 15, bottom: 15, right: 15),
+            padding: const EdgeInsets.only(left: 15, bottom: 5, right: 15),
             child: Text(
               post.text,
               style: const TextStyle(
                   color: AppColors.accentColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400),
+            ),
+            
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, bottom: 15, right: 15),
+              child: Text(
+                "página: ${post.pageNumber}",
+                style: const TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+              ),
+              
             ),
           ),
         ],
@@ -210,6 +225,7 @@ class BottomSheetPrayer extends StatefulWidget {
 
 class _BottomSheetPrayerState extends State<BottomSheetPrayer> {
   final TextEditingController postController = TextEditingController();
+  final TextEditingController pageNumberController = TextEditingController();
   final PostsRepository postsRepository = PostsRepositoryImpl();
   bool loading = false;
 
@@ -218,7 +234,7 @@ class _BottomSheetPrayerState extends State<BottomSheetPrayer> {
       loading = true;
     });
 
-    PostModel? result = await postsRepository.createPost(clubId: widget.clubId, text: postController.text);
+    PostModel? result = await postsRepository.createPost(clubId: widget.clubId, text: postController.text, pageNumber: int.tryParse(pageNumberController.text) ?? 0);
 
     setState(() {
       loading = false;
@@ -241,13 +257,22 @@ class _BottomSheetPrayerState extends State<BottomSheetPrayer> {
               child: AppTextMainWidget(text: "Criar uma postagem"),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50),
+              padding: const EdgeInsets.symmetric(vertical: 40),
               child: TextField(
                 controller: postController,
 
                 maxLines: 5,
                 decoration:
-                    const InputDecoration(border: OutlineInputBorder()),
+                    const InputDecoration(border: OutlineInputBorder(), hintText: "Sua Postagem"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: TextField(
+                controller: pageNumberController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(border: OutlineInputBorder(), label: Text("Página de referência")),
               ),
             ),
             AppButton(
@@ -255,6 +280,7 @@ class _BottomSheetPrayerState extends State<BottomSheetPrayer> {
                 label: "Salvar",
                 backgroundColor: AppColors.primaryColor,
                 ontap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
                   onSubmit().then((value) {
                     if (value != null) {
                       showDialog(

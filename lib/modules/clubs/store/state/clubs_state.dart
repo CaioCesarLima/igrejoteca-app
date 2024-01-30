@@ -10,6 +10,12 @@ class LoadedClubsState extends ClubState{
   LoadedClubsState(this.clubs);
 }
 
+class LoadedUserClubsState extends ClubState{
+  final List<ClubModel> clubs;
+
+  LoadedUserClubsState(this.clubs);
+}
+
 class ErrorClubsState extends ClubState{}
 
 class EmptyClubsState extends ClubState{}

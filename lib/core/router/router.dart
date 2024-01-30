@@ -8,7 +8,6 @@ import 'package:igrejoteca_app/modules/login/routes/routes.dart';
 import 'package:igrejoteca_app/modules/prayers/routes/prayers_routes.dart';
 import 'package:igrejoteca_app/modules/quiz/routes/quiz_routes.dart';
 import 'package:igrejoteca_app/modules/reservations/routes/reservation_routes.dart';
-
 class Router {
   final GetIt getIt;
 
@@ -30,7 +29,7 @@ class Router {
     };
     final builder = routes[settings.name];
     if (builder != null) {
-      return MaterialPageRoute(builder: (context) => builder(context));
+      return MaterialPageRoute(builder: (context) => builder(context), settings: settings);
     } else {
       // Tratar o caso em que a rota não foi encontrada.
       return MaterialPageRoute(builder: (context) => Container());

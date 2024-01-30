@@ -17,7 +17,6 @@ import 'package:igrejoteca_app/shared/Widgets/custom_dialog.dart';
 import 'package:igrejoteca_app/shared/data/models/auth_payload.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository.dart';
 import 'package:igrejoteca_app/shared/data/repositories/auth/auth_repository_impl.dart';
-import 'package:logger/logger.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:rx_notifier/rx_notifier.dart';
 
@@ -60,7 +59,6 @@ class _SignupPageState extends State<SignupPage> {
     );
 
     AuthPayload? result = response.fold((success) => success, (failure) {
-      Logger().i(failure.toFailure());
       setState(() {
         error = (failure as SignupExceptions).message;
       });

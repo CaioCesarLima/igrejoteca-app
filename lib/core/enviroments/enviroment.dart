@@ -1,7 +1,7 @@
 import './dev.dart' as dev;
 import './prod.dart' as prod;
 
-const String kEnvironmentMode = "PROD";
+const String kEnvironmentMode = "DEV";
 
 Uri getBackendURL({required String path, Map<String, dynamic>? queryParameters}) {
   return kEnvironmentMode == "DEV"

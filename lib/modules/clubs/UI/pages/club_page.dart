@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:igrejoteca_app/core/theme/colors.dart';
+import 'package:igrejoteca_app/core/utils/serialize_name.dart';
+import 'package:igrejoteca_app/modules/clubs/data/models/club_model.dart';
+import 'package:igrejoteca_app/modules/clubs/data/models/post_model.dart';
+import 'package:igrejoteca_app/modules/clubs/data/repositories/clubs_repositories.dart';
+import 'package:igrejoteca_app/modules/clubs/data/repositories/clubs_repositories_impl.dart';
+import 'package:igrejoteca_app/modules/clubs/data/repositories/posts_repositories.dart';
+import 'package:igrejoteca_app/modules/clubs/data/repositories/posts_repositories_impl.dart';
+import 'package:igrejoteca_app/modules/clubs/store/bloc/posts_bloc.dart';
+import 'package:igrejoteca_app/modules/clubs/store/event/posts_event.dart';
+import 'package:igrejoteca_app/modules/clubs/store/state/posts_state.dart';
+import 'package:igrejoteca_app/modules/login/store/auth_bloc.dart';
 import 'package:igrejoteca_app/shared/Widgets/custom_drawer.dart';
 
 import '../../../../shared/Widgets/app_button.dart';
 import '../../../../shared/Widgets/app_text_main_widget.dart';
 import '../../../../shared/Widgets/custom_dialog.dart';
-import '../../../prayers/data/testemonies_repository_impl.dart';
-import '../../../prayers/data/tetemonies_repository.dart';
-import '../../../prayers/store/bloc/testemony/bloc/testemony_bloc.dart';
-import '../../../prayers/store/bloc/testemony/event/testemony_event.dart';
+import '../../../login/store/auth_state.dart';
 
 class ClubPage extends StatefulWidget {
-  const ClubPage({super.key, this.clubId});
-  final String? clubId;
+  const ClubPage({super.key, required this.club});
+  final ClubModel club;
   static const String route = '/club';
   @override
   State<ClubPage> createState() => _ClubPageState();
@@ -21,45 +30,88 @@ class ClubPage extends StatefulWidget {
 
 class _ClubPageState extends State<ClubPage> {
   final bool participante = true;
-  late TestemonyBloc testemonyBloc;
+
+  late PostBloc postBloc;
+  bool isMember = false;
 
   @override
   void initState() {
     super.initState();
-    testemonyBloc = GetIt.I<TestemonyBloc>();
-    testemonyBloc.add(GetAllTestemonieEvent());
+    postBloc = GetIt.I<PostBloc>();
+    postBloc.add(GetPostsEvent(widget.club.clubId));
   }
 
   _bottomSheet() {
     showModalBottomSheet(
         context: context,
-        enableDrag: true,
+        useSafeArea: true,
+        isScrollControlled: true,
+
         backgroundColor: Colors.transparent,
         builder: (context) {
-          return const BottomSheetPrayer();
-        }).whenComplete(() => testemonyBloc.add(GetAllTestemonieEvent()));
+          return BottomSheetPrayer(clubId: widget.club.clubId);
+        }).then((value) {
+           if(value != null){
+            postBloc.add(GetPostsEvent(widget.club.clubId));
+           }
+        });
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocBuilder(
+      bloc: GetIt.I<AuthBloc>(),
+      builder: (context, authState) {
+      return Scaffold(
         backgroundColor: AppColors.lightBlueColor,
         appBar: AppBar(
           centerTitle: true,
-          title: const Text("Nome do Livro"),
+          title: Text(widget.club.bookName.serialize()),
         ),
         drawer: const CustomDrawer(),
-        body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) => GestureDetector(
-            onTap: (() {}),
-            child: const PostCard(),
-          ),
+        body: BlocConsumer(
+          listener: (context, state) {
+            String authId = (authState as UserLoggedState).user.id;
+            if(state is EmptyPostsState){
+              setState(() {
+                isMember = state.members.any((element) => element == authId);
+              });
+            }
+
+            if(state is LoadedPostsState){
+              setState(() {
+                isMember = state.payload.members.any((element) => element == authId);
+              });
+            }
+          },
+          bloc: postBloc,
+          builder: (context, state) {
+            if (state is LoadingPostsState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (state is LoadedPostsState) {
+              return ListView.builder(
+                itemCount: state.payload.posts.length,
+                itemBuilder: (context, index) {
+                  return PostCard(post: state.payload.posts[index]);
+                }
+              );
+            }
+            if(state is EmptyPostsState){
+              return const Center(
+              child: Text("Ainda sem postagens"),
+            );
+            }
+            return const Center(
+              child: Text("Falha ao carregar postagens!"),
+            );
+          },
         ),
-        floatingActionButtonLocation: participante
+        floatingActionButtonLocation: isMember
             ? FloatingActionButtonLocation.endFloat
             : FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: participante
+        floatingActionButton: isMember
             ? FloatingActionButton(
                 backgroundColor: AppColors.primaryColor,
                 onPressed: () {
@@ -74,7 +126,13 @@ class _ClubPageState extends State<ClubPage> {
                 width: 150,
                 child: FloatingActionButton(
                   backgroundColor: AppColors.primaryColor,
-                  onPressed: () {},
+                  onPressed: () {
+                    ClubsRepositoriesImpl().addMember(clubId: widget.club.clubId).then((value) {
+                      setState(() {
+                        isMember = value;
+                      });
+                    });
+                  },
                   child: const Center(
                       child: Padding(
                     padding: EdgeInsets.all(8.0),
@@ -88,12 +146,15 @@ class _ClubPageState extends State<ClubPage> {
                   )),
                 ),
               ));
+    },);
   }
 }
 
 class PostCard extends StatelessWidget {
+  final PostModel post;
   const PostCard({
     super.key,
+    required this.post,
   });
 
   @override
@@ -107,25 +168,25 @@ class PostCard extends StatelessWidget {
           Radius.circular(10),
         ),
       ),
-      child: const Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 15, left: 15, bottom: 5),
+            padding: const EdgeInsets.only(top: 15, left: 15, bottom: 5),
             child: Text(
-              "Nome do usuário",
-              style: TextStyle(
+              post.userName.serialize(),
+              style: const TextStyle(
                   color: AppColors.accentColor,
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 15, bottom: 15, right: 15),
+            padding: const EdgeInsets.only(left: 15, bottom: 15, right: 15),
             child: Text(
-              "Esse é meu comentário sobre o livro que eu queria compartilhar com todos vocês",
-              style: TextStyle(
+              post.text,
+              style: const TextStyle(
                   color: AppColors.accentColor,
                   fontSize: 14,
                   fontWeight: FontWeight.w400),
@@ -138,8 +199,9 @@ class PostCard extends StatelessWidget {
 }
 
 class BottomSheetPrayer extends StatefulWidget {
+  final String clubId;
   const BottomSheetPrayer({
-    super.key,
+    super.key, required this.clubId,
   });
 
   @override
@@ -147,19 +209,16 @@ class BottomSheetPrayer extends StatefulWidget {
 }
 
 class _BottomSheetPrayerState extends State<BottomSheetPrayer> {
-  final TextEditingController prayerController = TextEditingController();
-  final TestemoniesRepository testemoniesRepository =
-      TestemoniesRepositoryImpl();
+  final TextEditingController postController = TextEditingController();
+  final PostsRepository postsRepository = PostsRepositoryImpl();
   bool loading = false;
-  bool? isAnonymous = false;
 
-  Future<bool> onSubmit() async {
+  Future<PostModel?> onSubmit() async {
     setState(() {
       loading = true;
     });
 
-    bool result = await testemoniesRepository.createTestimony(
-        description: prayerController.text);
+    PostModel? result = await postsRepository.createPost(clubId: widget.clubId, text: postController.text);
 
     setState(() {
       loading = false;
@@ -181,15 +240,14 @@ class _BottomSheetPrayerState extends State<BottomSheetPrayer> {
               padding: EdgeInsets.only(top: 30),
               child: AppTextMainWidget(text: "Criar uma postagem"),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50),
-                child: TextField(
-                  controller: prayerController,
-                  maxLines: 5,
-                  decoration:
-                      const InputDecoration(border: OutlineInputBorder()),
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50),
+              child: TextField(
+                controller: postController,
+
+                maxLines: 5,
+                decoration:
+                    const InputDecoration(border: OutlineInputBorder()),
               ),
             ),
             AppButton(
@@ -198,14 +256,14 @@ class _BottomSheetPrayerState extends State<BottomSheetPrayer> {
                 backgroundColor: AppColors.primaryColor,
                 ontap: () {
                   onSubmit().then((value) {
-                    if (value) {
+                    if (value != null) {
                       showDialog(
                           context: context,
                           builder: (context) {
                             return const CustomDialog(
-                              text: "testemunho registrado com sucesso!",
+                              text: "Post Criado com sucesso!",
                             );
-                          }).whenComplete(() => Navigator.of(context).pop());
+                          }).whenComplete(() => Navigator.of(context).pop(value));
                     } else {
                       showDialog(
                           context: context,

@@ -10,6 +10,7 @@ import 'package:igrejoteca_app/modules/books/store/bloc/book/event/book_event.da
 import 'package:igrejoteca_app/modules/books/store/bloc/book/state/book_state.dart';
 import 'package:igrejoteca_app/modules/clubs/UI/pages/clubs_page.dart';
 import 'package:igrejoteca_app/shared/Widgets/app_button.dart';
+import 'package:logger/logger.dart';
 
 class CardBookWidget extends StatefulWidget {
   final BookModel book;
@@ -82,14 +83,17 @@ class _CardBookWidgetState extends State<CardBookWidget> {
                     label: "Informações",
                     backgroundColor: AppColors.primaryColor,
                     ontap: () {
+                      
                       showModalBottomSheet(
                           context: context,
+                          isScrollControlled: true,
                           builder: ((context) {
                             return SingleChildScrollView(
                               child: Column(
                                 children: [
                                   Column(
                                     children: [
+                                      const SizedBox(height: 10,),
                                       Padding(
                                         padding: const EdgeInsets.only(top: 15, right: 10, left: 10),
                                         child: Text(
@@ -171,9 +175,10 @@ class _CardBookWidgetState extends State<CardBookWidget> {
                                         label: "Clube do Livro",
                                         backgroundColor: AppColors.accentColor,
                                         ontap: () {
-                                          Navigator.of(context).pushNamed(ClubsPage.route);
+                                          Navigator.of(context).pushNamed(ClubsPage.route, arguments: widget.book.id);
                                         }),
                                   ),
+                                  const SizedBox(height: 20,)
                                 ],
                               ),
                             );

@@ -8,6 +8,7 @@ import 'package:igrejoteca_app/modules/login/routes/routes.dart';
 import 'package:igrejoteca_app/modules/prayers/routes/prayers_routes.dart';
 import 'package:igrejoteca_app/modules/quiz/routes/quiz_routes.dart';
 import 'package:igrejoteca_app/modules/reservations/routes/reservation_routes.dart';
+import 'package:logger/logger.dart';
 class Router {
   final GetIt getIt;
 

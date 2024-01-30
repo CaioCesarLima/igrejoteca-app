@@ -5,6 +5,7 @@ import 'package:result_dart/result_dart.dart';
 abstract class ClubsRepositories {
   Future<Result<List<ClubModel>, Exception>> getClubs();
   Future<Result<List<ClubModel>, Exception>> getUserClubs();
-  Future<bool> createClub({required String name, required String bookId, required String ownerId});
+  Future<Result<List<ClubModel>, Exception>> getBookClubs(String bookId);
+  Future<bool> createClub({required String name, required String bookId});
   Future<bool> addMember({required String clubId});
 }

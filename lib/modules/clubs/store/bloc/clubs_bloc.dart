@@ -11,6 +11,7 @@ class ClubBloc extends Bloc<ClubEvent, ClubState> {
   ClubBloc() : super(EmptyClubsState()) {
     on<GetClubsEvent>(_getClubs);
     on<GetUserClubsEvent>(_getUserClubs);
+    on<GetBookClubsEvent>(_getBookClubs);
   }
 
   Future<void> _getClubs(GetClubsEvent event, Emitter emit) async {
@@ -28,6 +29,19 @@ class ClubBloc extends Bloc<ClubEvent, ClubState> {
   Future<void> _getUserClubs(GetUserClubsEvent event, Emitter emit) async {
     emit(LoadingLoaClubsState());
     Result<List<ClubModel>, Exception> result = await clubRepository.getUserClubs();
+    result.fold((success) {
+
+      if (success.isEmpty) {
+        emit(EmptyClubsState());
+      } else {
+        emit(LoadedUserClubsState(success));
+      }
+    }, (failure) => emit(ErrorClubsState()));
+  }
+
+  Future<void> _getBookClubs(GetBookClubsEvent event, Emitter emit) async {
+    emit(LoadingLoaClubsState());
+    Result<List<ClubModel>, Exception> result = await clubRepository.getBookClubs(event.bookId);
     result.fold((success) {
       
       if (success.isEmpty) {

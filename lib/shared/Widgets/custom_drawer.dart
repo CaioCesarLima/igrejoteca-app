@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:igrejoteca_app/core/theme/colors.dart';
+import 'package:igrejoteca_app/core/utils/serialize_name.dart';
 import 'package:igrejoteca_app/modules/books/UI/pages/home_books_page.dart';
 import 'package:igrejoteca_app/modules/clubs/UI/pages/clubs_page.dart';
 import 'package:igrejoteca_app/modules/emprestimos/UI/pages/emprestimos_page.dart';
@@ -49,7 +50,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Container(
                     padding: const EdgeInsets.only(top: 80),
                     child: Text(
-                      "Olá, ${(state).user.name}!",
+                      "Olá, ${(state).user.name.serialize()}!",
                       style: const TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: 24,
